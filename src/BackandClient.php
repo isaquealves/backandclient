@@ -96,7 +96,12 @@ class BackandClient {
         }
 
     }
-	
+    
+    /**
+     * Build the request headers as needed
+     * @param  boolean $anonymous 
+     * @return array   the request headers as an array
+     */
     private function buildHeaders($anonymous)
     {
         $requestHeaders = [
@@ -115,6 +120,12 @@ class BackandClient {
         return $requestHeaders;
     }
 
+    /**
+     * Through a POST request, create an object of given type with the given data
+     * @param  string $objectType The object name in backand
+     * @param  array $postData   The POST data
+     * @return JSON             Returns a json object
+     */
     public function createObject ($objectType=null, $postData=null)
     {
         $this->getToken();
@@ -136,9 +147,9 @@ class BackandClient {
                     [
                             'headers' => [
                                 'Content-Type' => 'application/json',
-                    			'Accept' => 'application/json',
-                    			'Authorization' => ''. $this->tokenType . ' ' . $this->accessToken,
-                    			'AppName' => $this->backandAppName
+                                'Accept' => 'application/json',
+                                'Authorization' => ''. $this->tokenType . ' ' . $this->accessToken,
+                                'AppName' => $this->backandAppName
                             ],
                             'body' => $postData
                     ]
@@ -154,37 +165,60 @@ class BackandClient {
 
     }
 
+    /**
+     * Get the list of objects of the given type
+     * @param  string  $objectType The object name in backand
+     * @param  integer $pageSize   the page size
+     * @param  integer $pageNumber the page number
+     * @param  boolean $anonymous  boolean
+     * @return JSON
+     */
     public function getObjectList ($objectType, $pageSize=20, $pageNumber=1, $anonymous=true)
     {
         $requestHeaders = $this->buildHeaders($anonymous);
-        $request = $this
-            ->client
-            ->createRequest(
-                'GET',
-                self::BACKAND_REST_URL . '/1/objects/' . $objectType . '?pageSize=' . $pageSize . '&pageNumber=' . $pageNumber,
-                [
-                        'headers' => $requestHeaders
-                ]
-            );
-        return $this->client->send($request)->json();
+        try {
+            $request = $this
+                    ->client
+                    ->createRequest(
+                        'GET',
+                        self::BACKAND_REST_URL . '/1/objects/' . $objectType . '?pageSize=' . $pageSize . '&pageNumber=' . $pageNumber,
+                        [
+                                'headers' => $requestHeaders
+                        ]
+                    );
+                return $this->client->send($request)->json();
+        }catch(\Exception $e) {
+            return $e->getResponse()->json();
+        }
     }
 
+    /**
+     * Gets a single object from backand
+     * @param  string  $objectType  The object name in backand
+     * @param  integer  $objectId   The object id in backand
+     * @param  boolean $anonymous  
+     * @return JSON
+     */
     public function getSingleObject ($objectType, $objectId, $anonymous=true)
     {
         $requestHeaders = $this->buildHeaders($anonymous);
 
         $objectUrl = self::BACKAND_REST_URL . '/1/objects/' . $objectType . '/' . $objectId;
 
-        $request = $this
-            ->client
-            ->createRequest(
-                'GET',
-                $objectUrl,
-                [
-                        'headers' => $requestHeaders
-                ]
-            );
-        return $this->client->send($request)->json();
+        try{
+            $request = $this
+                ->client
+                ->createRequest(
+                    'GET',
+                    $objectUrl,
+                    [
+                            'headers' => $requestHeaders
+                    ]
+                );
+            return $this->client->send($request)->json();
+        }catch(\Exception $e){
+            return $e->getResponse()->json();
+        } 
     }
 
 
