@@ -1,6 +1,6 @@
 <?php
 /**
- * ApplicationClient.php
+ * BackandClient.php
  *
  *
  * @package  App
@@ -15,7 +15,7 @@ namespace App;
 use GuzzleHttp\Client;
 
 /**
- * App\ApplicationClient
+ * App\BackandClient
  * 
  * Class built to work with backand REST API.
  *
@@ -39,7 +39,8 @@ class BackandClient {
 
     private $anonymousToken;
 
-    public function __construct($options=null){
+    public function __construct($options=null)
+    {
         $this->username = getenv('BACKAND_USERNAME');
         $this->password = getenv('BACKAND_PASSWORD');
         $this->backandAppName = getenv('BACKAND_APPNAME');
