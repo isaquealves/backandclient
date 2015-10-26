@@ -17,11 +17,11 @@ use GuzzleHttp\Client;
 /**
  * App\ApplicationClient
  * 
- *
+ * Class built to work with backand REST API.
  *
  *
 */
-class ApplicationClient {
+class BackandClient {
 
     const BACKAND_API_URL   = 'https://api.backand.com:8080';
     const BACKAND_TOKEN_URL = self::BACKAND_API_URL . '/token';
@@ -55,11 +55,7 @@ class ApplicationClient {
     }
 
     /**
-     * The configuration object
-     *  - $config['username'] -  The username property
-     *  - $config['password'] -  The password property
-     *  - $config['appName']  -  The application name
-     *  - $config['grantType'] - The grant type
+     * @param $options array
      */
     private function createClient ($options=null)
     {
@@ -67,7 +63,11 @@ class ApplicationClient {
         $this->client = $client;
 
     }
-
+    
+    /**
+    *
+    * @return $tokenData array The token data array with keys access_token and token_type
+    */
     public function getToken ()
     {
         try {
@@ -95,7 +95,7 @@ class ApplicationClient {
         }
 
     }
-
+	
     private function buildHeaders($anonymous)
     {
         $requestHeaders = [
