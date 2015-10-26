@@ -11,6 +11,4 @@ class BackandClientSpec extends ObjectBehavior
     {
         $this->shouldHaveType('App\BackandClient');
     }
-
-    
 }
